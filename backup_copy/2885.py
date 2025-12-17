@@ -1,0 +1,1 @@
+f.seek(0,0)f.seek(0,0)f.seek(0,0)f.seek(0,0)f.seek(0,0)f.seek(0,0)f.seek(0,0)f.seek(0,0)f.seek(0,0)

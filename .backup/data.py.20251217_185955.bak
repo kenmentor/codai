@@ -1,0 +1,3 @@
+# Sample Python data file
+
+data = ["apple", "banana", "cherry", "date"]
