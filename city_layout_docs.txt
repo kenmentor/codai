@@ -1,0 +1,26 @@
+# City Layout Implementation using Tkinter
+
+## Overview
+This document explains how the initial city layout is created using the Tkinter library in Python. The layout is a simple graphical representation, including roads and buildings.
+
+## Components
+- **Tkinter Main Window**: Provides the main application window where the city layout is displayed.
+- **Canvas**: A rectangular area intended for drawing operations.
+- **Rectangles**: Used to represent parts of a city such as roads and buildings.
+
+## Implementation Details
+- The window title is set to 'Beautiful City Layout' and dimensions are set to 800x600.
+- A canvas is created and packed into the main window with a light blue background.
+- Roads are represented using gray rectangles:
+  - A main horizontal road stretching across the window.
+  - A vertical crossroad cutting through the main road.
+- Buildings are represented using light coral colored rectangles, positioned across four quadrants of the window.
+
+## Functions
+- `create_city()`: Initializes the Tkinter window, sets up the canvas, and draws the roads and buildings.
+- `window.mainloop()`: Starts the Tkinter event loop, allowing the window to display and remain responsive.
+
+## Usage
+- Run `city_layout.py` to launch the window and view the city layout.
+
+Feel free to expand upon this foundation by adding more elements to the city layout as needed.

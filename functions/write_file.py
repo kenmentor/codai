@@ -28,7 +28,7 @@ def write_file(
     file_path = os.path.abspath(os.path.join(base_path, target_file))
     backup_dir = os.path.join(base_path, ".backup")
 
-    # 🔒 Security check
+
     if not file_path.startswith(base_path):
         return {
             "status": "error",
@@ -45,14 +45,13 @@ def write_file(
         }
 
     try:
-        # Ensure parent directories
+       
         parent_dir = os.path.dirname(file_path)
         if create_dirs and not os.path.isdir(parent_dir):
             os.makedirs(parent_dir, exist_ok=True)
 
         backup_created = False
 
-        # Backup old file if it exists
         if backup and file_existed:
             os.makedirs(backup_dir, exist_ok=True)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -66,7 +65,7 @@ def write_file(
                 bf.write(old_content)
             backup_created = True
 
-        # Write content
+      
         with open(file_path, "w", encoding="utf-8") as f:
             chars_written = f.write(content)
 

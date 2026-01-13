@@ -19,12 +19,12 @@ def read_file(base_dir="", target_file=None):
   
       
 
-    # 2. Convert to absolute paths
+
    
    
     print("hello ",file_path,"hello",target_file)
     
-    # 3. Security check: is target inside base?
+
     if not file_path.startswith(base_path):
         return f"Error: {target_file} is outside {base_dir}"
     if not os.path.isfile(target_file):  return f"Error: {target_file} is not a file"

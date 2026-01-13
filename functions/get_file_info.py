@@ -20,12 +20,10 @@ def get_file_info(base_dir="", target_dir=None):
   
       
 
-    # 2. Convert to absolute paths
-   
-   
+ 
    
     result = ""
-    # 3. Security check: is target inside base?
+
     if not target_path.startswith(base_path):
         return f"Error: {target_dir} is outside {base_dir}"
     try:
@@ -37,9 +35,7 @@ def get_file_info(base_dir="", target_dir=None):
             content_path = os.path.join(target_path,content)
             size = os.path.getsize(content_path)
             is_dir = os.path.isdir(content_path)
-            # if  not is_dir:
-            #     data = open(content_path,"r")
-            #     print(data.read())
+       
         
             result += f" -path:{content_path} -- size:{size}byte -- isdir:{is_dir}\n"
         return result

@@ -26,9 +26,6 @@ show_banner()
 docs: https://platform.openai.com/docs/guides/function-calling
 """
 
-# --------------------------------------------------------------
-# Define the tool (function) that we want to call
-# --------------------------------------------------------------
 tools_set = {
     "read_file":read_file,
      "get_file_info":get_file_info,
@@ -285,7 +282,7 @@ messages = [
 ]
 while True:
     
-    MAX_ITERATIONS = 10  # prevent infinite loops
+    MAX_ITERATIONS = 10  
     userinput = get_user_input()
     messages.append({"role": "user", "content": userinput})
     iteration = 0
@@ -301,15 +298,8 @@ while True:
         assistant_msg = completion.choices[0].message
         messages.append(assistant_msg)
 
-        # --------------------------------------------------------------
-        # Step 2: Model decides to call function(s)
-        # --------------------------------------------------------------
+     
 
-        completion.model_dump()
-
-        # --------------------------------------------------------------
-        # Step 3: Execute get_weather function
-        # --------------------------------------------------------------
 
 
         def call_function(name: str, args: dict):
@@ -332,16 +322,12 @@ while True:
         for tool_call in tool_calls:
             name = tool_call.function.name
             args = json.loads(tool_call.function.arguments)
-        
-
             result = call_function(name, args)
             messages.append(
                 {"role": "tool", "tool_call_id": tool_call.id, "content": json.dumps(result)}
             )
 
-        # --------------------------------------------------------------
-        # Step 4: Supply result and call model again
-        # --------------------------------------------------------------
+
 
 
         class FileInfoResponse(BaseModel):
@@ -361,19 +347,10 @@ while True:
         )
 
 
-        # --------------------------------------------------------------
-        # Step 5: Check model response
-        # --------------------------------------------------------------
 
         final_response = completion_2.choices[0].message.parsed
         final_response = completion_2.choices[0].message.parsed
 
-
-    # Suppose final_response is your parsed result
-    # final_response = completion_2.choices[0].message.parsed
-
-    # Pretty JSON view of parsed data
-        # Separate panels for details and message
         if final_response == None:
             console.print(Panel("can you retype your qestion something when wrong", title="[green]Details[/green]", expand=True))
         else:

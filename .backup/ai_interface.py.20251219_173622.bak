@@ -1,0 +1,86 @@
+import os
+import json
+import requests
+from dotenv import load_dotenv
+from openai import OpenAI
+from rich.console import Console
+from rich.panel import Panel
+from functions.read_file import read_file
+from functions.write_file import write_file
+from functions.run_file import run_file
+from functions.get_file_info import get_file_info
+
+console = Console()
+load_dotenv()  # Load environment variables, including API keys
+
+# Initialize OpenAI client
+gpt_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# Toolset for executing various file operations
+tools_set = {
+    "read_file": read_file,
+    "write_file": write_file,
+    "get_file_info": get_file_info,
+    "run_file": run_file
+}
+
+# System prompt providing the rules and capabilities of the AI system
+system_prompt = """
+You are a specialized AI assistant focused on managing and manipulating files carefully.
+You must always adhere to safety, ensuring no unauthorized file access occurs.
+
+Tools you have access to:
+1. read_file: Reads contents of a specified file.
+2. write_file: Writes data to a specified file, creating it if necessary.
+3. get_file_info: Retrieves metadata of files and directories.
+4. run_file: Executes Python files within a controlled environment.
+
+Adhere to protocols to maintain file security and operational efficiency.
+"""
+
+# Begin interaction loop
+def user_interaction():
+    messages = [{"role": "system", "content": system_prompt}]
+
+    while True:
+        user_input = console.input("[bold green]User:[/bold green] ")
+        messages.append({"role": "user", "content": user_input})
+
+        # Query OpenAI with the current information
+        response = gpt_client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages
+        )
+
+        assistant_output = response.choices[0].message
+        messages.append(assistant_output)
+
+        # Display the assistant's response
+        console.print(Panel(assistant_output.content, title="[blue]Assistant[/blue]"))
+
+        # Check for and execute any requested tool actions
+        if "tool_calls" in assistant_output:
+            execute_tools(assistant_output.tool_calls, messages)
+
+# Function to handle tool execution
+
+def execute_tools(tool_calls, messages):
+    for tool_call in tool_calls:
+        function_name = tool_call.function.name
+        arguments = json.loads(tool_call.function.arguments)
+
+        if function_name in tools_set:
+            try:
+                result = tools_set[function_name](**arguments)
+                console.print(Panel(f"[Tool Output] {function_name}: {result}", title="[orange]Tool Response[/orange]"))
+            except Exception as e:
+                error_message = f"An error occurred while executing '{function_name}': {str(e)}"
+                console.print(Panel(error_message, title="[red]Error[/red]"))
+                messages.append({"role": "assistant", "content": error_message})
+        else:
+            error_message = f"Tool '{function_name}' not found."
+            console.print(Panel(error_message, title="[red]Error[/red]"))
+            messages.append({"role": "assistant", "content": error_message})
+
+if __name__ == "__main__":
+    user_interaction()
